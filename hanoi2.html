@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <title>La Torre di Hanoi</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="stile1.css"/>
+</head>
+<body>
+    </br></br></br></br></br></br></br></br>
+    <div class="container game-container">
+        <header>
+            <center><h1>La Torre di Hanoi</h1></center>
+        </header>
+        <main>
+            <div class="row">
+                <div id="pole1" class="col-4"></div>
+                <div id="pole2" class="col-4"></div>
+                <div id="pole3" class="col-4"></div>
+            </div>
+            <div class="row" style="margin-top:20px;">
+                <div class="col-4">
+                    <center><button id="btn1" class="btn btn-primary" onclick="actionPole(1)">Prendi</button></center>
+                </div>
+                <div class="col-4">
+                    <center><button id="btn2" class="btn btn-primary" onclick="actionPole(2)">Prendi</button></center>
+                </div>
+                <div class="col-4">
+                    <center><button id="btn3" class="btn btn-primary" onclick="actionPole(3)">Prendi</button></center>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4"></div>
+                <div id="myHand" class="col-4"></div>
+                <div class="col-4"></div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <center>
+                            <div class="button-container">
+                                <h4>Mosse: <span id="moveCount">0</span></h4>
+                            </div>
+                            <div class="button-container">
+							
+                                <button id="btnRestart" class="btn btn-primary button-style active-btn" onclick="restartGame()">Restart </button>
+								</br></br>
+                            </div>
+                        </center>
+                    </div>
+                </div>
+            </div>
+			<center>
+     
+     
+   <marquee  behavior="alternate" direction="right">         
+           <img src="han.PNG" alt="Torre di hanoi" style="width: 200px; height: auto;">
+    
+</marquee>  
+</center>
+        </main>
+    </div>
+    <footer>
+        </br></br>
+        <p>&copy; Christian Catena</p>
+    </footer>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script> <!-- Integrazione Javascript Bootstrap -->
+<script>
+    var pole1 = [1,2,3,4];
+    var pole2 = [];
+    var pole3 = [];
+    var mano = 0;
+    var moveCounter = 0;
+
+    drawScene();
+
+    function drawScene(){
+        drawPoles();
+        drawHand();
+        checkButtons();
+    }
+
+    function drawPoles(){
+        for(let i=1;i<4;i++){
+            drawPole(getPole(i), getDivPole(i));
+        }
+    }
+
+    function getDivPole(n){
+        return document.getElementById("pole"+n);
+    }
+
+    function drawPole(pole, div){
+        div.innerHTML = "";
+        for(let i=0; i<pole.length; i++){
+            div.innerHTML+=drawDisk(pole[i]);
+        }
+    }
+
+    function checkButtons(){
+        for(let i=1;i<4;i++)
+            checkButton(i);
+    }	
+
+    function getPole(n){
+        switch(n){
+            case 1: return pole1;
+            case 2: return pole2;
+            case 3: return pole3;
+        }
+    }
+
+    function checkButton(n){
+        let button = document.getElementById("btn" + n);
+        let pole = getPole(n);
+        if(mano==0){
+            button.innerText = "Prendi";
+            button.disabled = pole.length == 0;
+        } else {
+            button.innerText = "Metti";				
+            button.disabled = pole.length > 0 ? pole[0] < mano : false;			
+        }
+    }
+
+    function drawHand(){
+        let handDiv = document.getElementById("myHand");
+        handDiv.innerHTML = drawDisk(mano);
+    }
+
+    function actionPole(n){
+        if(mano==0){
+            mano = getPole(n).shift();
+        } else {
+            getPole(n).unshift(mano);
+            mano = 0;
+            moveCounter++;
+            document.getElementById("moveCount").innerText = moveCounter;
+        }
+        drawScene();
+    }
+
+    function getColor(dimension){
+        let color = "#FF0000";
+        switch(dimension){
+            case 1: color = "#000000"; break;
+            case 2: color = "#0000FF"; break;		
+            case 3: color = "#00FF00"; break;
+        }
+        return color;
+    }
+
+    function drawDisk(dimension){
+        let color = getColor(dimension);
+        return '<div class="disk" style="background-color:'+color+'; width:'+dimension*10+'%;"></div>';
+    }
+	 function restartGame() {
+        pole1 = [1,2,3,4];
+        pole2 = [];
+        pole3 = [];
+        mano = 0;
+        moveCounter = 0; 
+        document.getElementById("moveCount").innerText = moveCounter; 
+        drawScene();
+    }
+</script>
+</html>
+ 
